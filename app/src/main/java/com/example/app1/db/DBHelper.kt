@@ -31,7 +31,6 @@ class DBHelper(context: Context, factory: SQLiteDatabase.CursorFactory?) :
         db.execSQL(query2)
         val query3 = "CREATE TABLE products_table ( id INTEGER PRIMARY KEY, name TEXT, price TEXT )"
         db.execSQL(query3)
-
     }
 
     override fun onUpgrade(db: SQLiteDatabase, p1: Int, p2: Int) {
@@ -39,7 +38,6 @@ class DBHelper(context: Context, factory: SQLiteDatabase.CursorFactory?) :
         db.execSQL("DROP TABLE IF EXISTS COUNTRY")
         db.execSQL("DROP TABLE IF EXISTS products_table")
         onCreate(db)
-
     }
 
     fun addName(name : String, age : String ){
