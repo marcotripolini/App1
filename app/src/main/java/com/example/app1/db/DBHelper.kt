@@ -9,39 +9,39 @@ import android.database.sqlite.SQLiteOpenHelper
 class DBHelper(context: Context, factory: SQLiteDatabase.CursorFactory?) :
     SQLiteOpenHelper(context, DATABASE_NAME, factory, DATABASE_VERSION) {
 
-    // un nome di database
-    // versione 1.00
-    // /data/data/com.example.app1/databases/
-    // /data/data/com.example.app1/preferences/
-    // /data/data/com.example.app1/preferences/app_preferences.xml
-
     // below is the method for creating a database by a sqlite query
+
     override fun onCreate(db: SQLiteDatabase) {
         // below is a sqlite query, where column names
         // along with their data types is given
-        val query = ("CREATE TABLE " + TABLE_NAME + " ("
-                +
-                ID_COL + " INTEGER PRIMARY KEY, " +
-                NAME_COl + " TEXT," +
-                AGE_COL + " TEXT" + ")")
 
-
+        val query = (
+                "CREATE TABLE " +
+                USERS_TABLE_NAME + " ("  +
+                USERS_ID_COL + " INTEGER PRIMARY KEY, " +
+                USERS_NAME_COL + " TEXT, " +
+                USERS_AGE_COL + " TEXT, " +
+                USERS_ADDRESS_COL + " TEXT, " +
+                USERS_COUNTRY_COL + " TEXT, " +
+                USERS_PHONE_COL + " TEXT ) " )
         // we are calling sqlite
         // method for executing our query
         db.execSQL(query)
+        var query2 = "CREATE TABLE COUNTRY (ID INTEGER PRIMARY KEY, NAME TEXT)"
+        db.execSQL(query2)
+        val query3 = "CREATE TABLE products_table ( id INTEGER PRIMARY KEY, name TEXT, price TEXT )"
+        db.execSQL(query3)
+
     }
 
     override fun onUpgrade(db: SQLiteDatabase, p1: Int, p2: Int) {
-        // this method is to check if table already exists
-        // aggiungere una colonna
-        // modificare una o più colonne
-        // modifcare dei dati
-
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME)
+        db.execSQL("DROP TABLE IF EXISTS " + USERS_TABLE_NAME)
+        db.execSQL("DROP TABLE IF EXISTS COUNTRY")
+        db.execSQL("DROP TABLE IF EXISTS products_table")
         onCreate(db)
+
     }
 
-    // This method is for adding data in our database
     fun addName(name : String, age : String ){
 
         // below we are creating
@@ -50,8 +50,8 @@ class DBHelper(context: Context, factory: SQLiteDatabase.CursorFactory?) :
 
         // we are inserting our values
         // in the form of key-value pair
-        values.put(NAME_COl, name)
-        values.put(AGE_COL, age)
+        values.put(USERS_NAME_COL, name)
+        values.put(USERS_AGE_COL, age)
 
         // here we are creating a
         // writable variable of
@@ -60,7 +60,7 @@ class DBHelper(context: Context, factory: SQLiteDatabase.CursorFactory?) :
         val db = this.writableDatabase
 
         // all values are inserted into database
-        db.insert(TABLE_NAME, null, values)
+        db.insert(USERS_TABLE_NAME, null, values)
 
         // at last we are
         // closing our database
@@ -76,28 +76,35 @@ class DBHelper(context: Context, factory: SQLiteDatabase.CursorFactory?) :
         val db = this.readableDatabase
         // below code returns a cursor to
         // read data from the database
-        return db.rawQuery("SELECT * FROM " + TABLE_NAME, null)
+        return db.rawQuery("SELECT * FROM " + USERS_TABLE_NAME, null)
     }
 
     companion object{
-        // here we have defined variables for our database
-
         // below is variable for database name
         private val DATABASE_NAME = "USERS"
-
         // below is the variable for database version
-        private val DATABASE_VERSION = 1
+        private val DATABASE_VERSION = 8
 
-        // below is the variable for table name
-        val TABLE_NAME = "users_table"
+        val USERS_TABLE_NAME = "users_table"
+        val USERS_ID_COL = "id"
+        val USERS_NAME_COL = "name"
+        val USERS_AGE_COL = "age"
+        val USERS_ADDRESS_COL = "address"
+        val USERS_COUNTRY_COL = "country"
+        val USERS_PHONE_COL = "phone"
 
-        // below is the variable for id column
-        val ID_COL = "id"
+        val PROD_TABLE_NAME = "products_table"
+        val PROD_ID_COL = "id"
+        val PROD_NAME_COL = "name"
+        val PROD_PRICE_COL = "price"
 
-        // below is the variable for name column
-        val NAME_COl = "name"
 
-        // below is the variable for age column
-        val AGE_COL = "age"
+        // ho un database
+        // questo database ha un nome : USERS
+
+        // un database contiene una o più tabelle.
+        // una tabella ha un nome : users_table
+        // ora aggiungo la tabella products_table
+
     }
 }
