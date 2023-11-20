@@ -14,7 +14,6 @@ class DBHelper(context: Context, factory: SQLiteDatabase.CursorFactory?) :
     override fun onCreate(db: SQLiteDatabase) {
         // below is a sqlite query, where column names
         // along with their data types is given
-
         val query = (
             "CREATE TABLE " +
             USERS_TABLE_NAME + " ("  +
@@ -26,7 +25,6 @@ class DBHelper(context: Context, factory: SQLiteDatabase.CursorFactory?) :
             USERS_PHONE_COL + " TEXT ) " )
         // we are calling sqlite
         // method for executing our query
-
 
         db.execSQL(query)
         var query2 = "CREATE TABLE COUNTRY (ID INTEGER PRIMARY KEY, NAME TEXT)"
@@ -43,7 +41,6 @@ class DBHelper(context: Context, factory: SQLiteDatabase.CursorFactory?) :
     }
 
     fun addName(name : String, age : String ){
-
         // below we are creating
         // a content values variable
         val values = ContentValues()
@@ -67,6 +64,23 @@ class DBHelper(context: Context, factory: SQLiteDatabase.CursorFactory?) :
         db.close()
     }
 
+    fun addUserRecord(name : String,
+                      age : String,
+                      address: String,
+                      country: String,
+                      phone: String){
+        val values = ContentValues()
+        values.put(USERS_NAME_COL, name)
+        values.put(USERS_AGE_COL, age)
+        values.put(USERS_ADDRESS_COL, address)
+        values.put(USERS_COUNTRY_COL, country)
+        values.put(USERS_PHONE_COL, phone)
+
+        val db = this.writableDatabase
+        db.insert(USERS_TABLE_NAME, null, values)
+        db.close()
+    }
+
     // below method is to get
     // all data from our database
     fun getName(): Cursor? {
@@ -83,7 +97,7 @@ class DBHelper(context: Context, factory: SQLiteDatabase.CursorFactory?) :
         // below is variable for database name
         private val DATABASE_NAME = "USERS"
         // below is the variable for database version
-        private val DATABASE_VERSION = 8
+        private val DATABASE_VERSION = 10
 
         val USERS_TABLE_NAME = "users_table"
         val USERS_ID_COL = "id"
@@ -97,7 +111,6 @@ class DBHelper(context: Context, factory: SQLiteDatabase.CursorFactory?) :
         val PROD_ID_COL = "id"
         val PROD_NAME_COL = "name"
         val PROD_PRICE_COL = "price"
-
 
         // ho un database
         // questo database ha un nome : USERS

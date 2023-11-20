@@ -166,21 +166,14 @@ class MainActivity : ComponentActivity() {
     }
 
     fun onButtonClick(view: View?) {
-        val pref = applicationContext.getSharedPreferences("app_preferences", 0) // 0 - for private mode
-        val editor = pref.edit()
-        println(pref.getString("email", null))          // leggiamo solo l'indirizzo email
-                                                        // che abbiamo salvato dentro
-                                                        // paperino_preferenze
-
-
-        val myToast = Toast.makeText(applicationContext,"toast message with gravity",Toast.LENGTH_SHORT)
-        myToast.setGravity(Gravity.TOP,1,1)
-        myToast.show()
-
         val db = DBHelper(this, null)
-        val name = "Marco"
-        val age = "25"
+        val name = "Mario"
+        val age = "38"
         db.addName(name, age)
+        db.addUserRecord("Stefano", "38", "Via Roma 1", "Italia", "3206156477")
+        db.addUserRecord("Franco", "29", "Via Maiella 2", "Italia", "3206156477")
+        db.addUserRecord("Roberto", "48", "Via delle Galline 38", "Italia", "3206156477")
+
         val cursor = db.getName()
 
         cursor!!.moveToFirst()
