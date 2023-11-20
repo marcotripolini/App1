@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "442992415366",
+    "project_id": "provola001-a73f1",
+    "storage_bucket": "provola001-a73f1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:442992415366:android:fd64eac3a6c61c3813f707",
+        "android_client_info": {
+          "package_name": "com.example.app1"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDc_QgZDLHHI4_nvvBdX6bOnMylTIegnOw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

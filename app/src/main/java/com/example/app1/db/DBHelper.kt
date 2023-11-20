@@ -12,21 +12,21 @@ class DBHelper(context: Context, factory: SQLiteDatabase.CursorFactory?) :
     // below is the method for creating a database by a sqlite query
 
     override fun onCreate(db: SQLiteDatabase) {
-        // provola
         // below is a sqlite query, where column names
         // along with their data types is given
 
         val query = (
-                "CREATE TABLE " +
-                USERS_TABLE_NAME + " ("  +
-                USERS_ID_COL + " INTEGER PRIMARY KEY, " +
-                USERS_NAME_COL + " TEXT, " +
-                USERS_AGE_COL + " TEXT, " +
-                USERS_ADDRESS_COL + " TEXT, " +
-                USERS_COUNTRY_COL + " TEXT, " +
-                USERS_PHONE_COL + " TEXT ) " )
+            "CREATE TABLE " +
+            USERS_TABLE_NAME + " ("  +
+            USERS_ID_COL + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+            USERS_NAME_COL + " TEXT, " +
+            USERS_AGE_COL + " TEXT, " +
+            USERS_ADDRESS_COL + " TEXT, " +
+            USERS_COUNTRY_COL + " TEXT, " +
+            USERS_PHONE_COL + " TEXT ) " )
         // we are calling sqlite
         // method for executing our query
+
 
         db.execSQL(query)
         var query2 = "CREATE TABLE COUNTRY (ID INTEGER PRIMARY KEY, NAME TEXT)"
@@ -34,7 +34,6 @@ class DBHelper(context: Context, factory: SQLiteDatabase.CursorFactory?) :
         val query3 = "CREATE TABLE products_table ( id INTEGER PRIMARY KEY, name TEXT, price TEXT )"
         db.execSQL(query3)
     }
-
 
     override fun onUpgrade(db: SQLiteDatabase, p1: Int, p2: Int) {
         db.execSQL("DROP TABLE IF EXISTS " + USERS_TABLE_NAME)
