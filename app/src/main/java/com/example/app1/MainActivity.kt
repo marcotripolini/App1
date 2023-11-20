@@ -158,9 +158,9 @@ class MainActivity : ComponentActivity() {
         // moving our cursor to next
         // position and appending values
         // while(cursor.moveToNext()){
-            // Name.append(cursor.getString(cursor.getColumnIndex(DBHelper.NAME_COl)) + "\n")
-            // Age.append(cursor.getString(cursor.getColumnIndex(DBHelper.AGE_COL)) + "\n")
-        //}
+        //     (cursor.getString(cursor.getColumnIndex(DBHelper.NAME_COl)) + "\n")
+        //    (cursor.getString(cursor.getColumnIndex(DBHelper.AGE_COL)) + "\n")
+        // }
         // at last we close our cursor
         // cursor.close()
     }
@@ -177,8 +177,16 @@ class MainActivity : ComponentActivity() {
         val cursor = db.getName()
 
         cursor!!.moveToFirst()
-        print(cursor.getString(1))
-        print(cursor.getString(2))
+
+        while(cursor.moveToNext()){
+            print(cursor.getString(1))
+            print(cursor.getString(2))
+            print(cursor.getString(3))
+            print(cursor.getString(4))
+        }
+
+        // print(cursor.getString(1))
+        // print(cursor.getString(2))
 
         cursor.close()
         }
