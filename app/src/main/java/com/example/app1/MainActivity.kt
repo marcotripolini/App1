@@ -166,6 +166,7 @@ class MainActivity : ComponentActivity() {
     }
 
     fun onButtonClick(view: View?) {
+        /*
         val db = DBHelper(this, null)
         val name = "Mario"
         val age = "38"
@@ -173,16 +174,19 @@ class MainActivity : ComponentActivity() {
         db.addUserRecord("Stefano", "38", "Via Roma 1", "Italia", "3206156477")
         db.addUserRecord("Franco", "29", "Via Maiella 2", "Italia", "3206156477")
         db.addUserRecord("Roberto", "48", "Via delle Galline 38", "Italia", "3206156477")
+        */
 
+        val db = DBHelper(this, null)
         val cursor = db.getName()
 
         cursor!!.moveToFirst()
 
         while(cursor.moveToNext()){
-            print(cursor.getString(1))
-            print(cursor.getString(2))
-            print(cursor.getString(3))
-            print(cursor.getString(4))
+            println(cursor.getString(cursor.getColumnIndexOrThrow(DBHelper.USERS_NAME_COL)))
+            println(cursor.getString(cursor.getColumnIndexOrThrow(DBHelper.USERS_AGE_COL)))
+            println(cursor.getString(cursor.getColumnIndexOrThrow(DBHelper.USERS_ADDRESS_COL)))
+            println(cursor.getString(cursor.getColumnIndexOrThrow(DBHelper.USERS_COUNTRY_COL)))
+            println(cursor.getString(cursor.getColumnIndexOrThrow(DBHelper.USERS_PHONE_COL)))
         }
 
         // print(cursor.getString(1))
