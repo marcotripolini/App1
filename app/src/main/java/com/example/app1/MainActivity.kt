@@ -131,14 +131,12 @@ class MainActivity : ComponentActivity() {
     */
 
     fun onButtonRead (view: View?) {
-
         val pref = applicationContext.getSharedPreferences("paperino_preferenze", 0) // 0 - for private mode
         val editor = pref.edit()
         val email = pref.getString("email", null)
         println(email)
 
         // leggiamo solo l'indirizzo email
-
         // che abbiamo salvato dentro
         // paperino_preferenze
         // val db = DBHelper(this, null)
@@ -177,22 +175,31 @@ class MainActivity : ComponentActivity() {
         */
 
         val db = DBHelper(this, null)
-        val cursor = db.getName()
-
+        val cursor = db.getAllUsers()
         cursor!!.moveToFirst()
-
-        while(cursor.moveToNext()){
+        do {
             println(cursor.getString(cursor.getColumnIndexOrThrow(DBHelper.USERS_NAME_COL)))
             println(cursor.getString(cursor.getColumnIndexOrThrow(DBHelper.USERS_AGE_COL)))
             println(cursor.getString(cursor.getColumnIndexOrThrow(DBHelper.USERS_ADDRESS_COL)))
             println(cursor.getString(cursor.getColumnIndexOrThrow(DBHelper.USERS_COUNTRY_COL)))
             println(cursor.getString(cursor.getColumnIndexOrThrow(DBHelper.USERS_PHONE_COL)))
-        }
+        } while (cursor.moveToNext())
 
         // print(cursor.getString(1))
         // print(cursor.getString(2))
 
         cursor.close()
+
+        val cursor2 = db.getUserById("19")
+        cursor2!!.moveToFirst()
+        do {
+            println(cursor2.getString(cursor.getColumnIndexOrThrow(DBHelper.USERS_NAME_COL)))
+            println(cursor2.getString(cursor.getColumnIndexOrThrow(DBHelper.USERS_PHONE_COL)))
+        } while (cursor2.moveToNext())
+
+        cursor2.close()
+
         }
+
     }
 

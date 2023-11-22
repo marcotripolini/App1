@@ -93,6 +93,53 @@ class DBHelper(context: Context, factory: SQLiteDatabase.CursorFactory?) :
         return db.rawQuery("SELECT * FROM " + USERS_TABLE_NAME, null)
     }
 
+    fun getAllUsers(): Cursor? {
+        val db = this.readableDatabase
+            // here we are creating a readable
+            // olny the read permission are available here
+        return db.rawQuery("SELECT * FROM " + USERS_TABLE_NAME + " order by " + USERS_NAME_COL, null)
+    }
+
+    fun getUserById(id : String): Cursor? {
+        val db = this.readableDatabase
+        return db.rawQuery("SELECT * FROM " + USERS_TABLE_NAME + " where id = " + id, null)
+    }
+
+    fun getUserNameById(id : String): Cursor? {
+        val db = this.readableDatabase
+        return db.rawQuery("SELECT name FROM " + USERS_TABLE_NAME + " where id = " + id, null)
+    }
+
+    fun getUserPhoneById(id : String): Cursor? {
+        val db = this.readableDatabase
+        return db.rawQuery("SELECT phone FROM " + USERS_TABLE_NAME + " where id = " + id, null)
+    }
+
+    fun updateUserRecord(name : String,
+                            age : String,
+                            address: String,
+                            country: String,
+                            phone: String,
+                            id: String){
+
+        val values = ContentValues()
+        values.put(USERS_NAME_COL, name)
+        values.put(USERS_AGE_COL, age)
+        values.put(USERS_ADDRESS_COL, address)
+        values.put(USERS_COUNTRY_COL, country)
+        values.put(USERS_PHONE_COL, phone)
+
+        val db = this.writableDatabase
+        db.update(USERS_TABLE_NAME, values, "id = " + id, null)
+        db.close()
+    }
+
+    fun deleteUserRecord(id: String){
+        val db = this.writableDatabase
+        db.delete(USERS_TABLE_NAME, "id = " + id,null)
+        db.close()
+    }
+
     companion object{
         // below is variable for database name
         private val DATABASE_NAME = "USERS"
