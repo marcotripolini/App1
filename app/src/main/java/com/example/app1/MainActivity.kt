@@ -16,7 +16,7 @@ class MainActivity : ComponentActivity() {
         // l'xml da caricare...
         setContentView(R.layout.activity_main)
 
-        val button =  findViewById<Button>(R.id.button)
+        val button = findViewById<Button>(R.id.button)
 
         // Toast.makeText(applicationContext,"onCreate Called",Toast.LENGTH_LONG).show()
         // Toast.makeText(applicationContext,"this is a toast message",Toast.LENGTH_SHORT).show()
@@ -53,7 +53,10 @@ class MainActivity : ComponentActivity() {
         editor_preferenze_carrello.putString("totale_carrello", "prezzo");
         editor_preferenze_carrello.putString("codici_sconto", "3206156477");
         editor_preferenze_carrello.commit();
-        val preferenze = applicationContext.getSharedPreferences("paperino_preferenze", 0)  // 0 - for private mode
+        val preferenze = applicationContext.getSharedPreferences(
+            "paperino_preferenze",
+            0
+        )  // 0 - for private mode
 
 
         // Editor serve per scrivere nelle preferenze                                                                                // 1 - anche altre applicazioni
@@ -64,7 +67,7 @@ class MainActivity : ComponentActivity() {
         editor.commit();
 
         val preferenze2 = this.getPreferences(0) // 0 - for private mode
-
+        val preferenze3 = this.getPreferences(0)
         // non esiste push e pop,
         // per aggiungere un'activity allo stack usi StartActivity()
         // per rimuovere un'activity dallo stack usi finish()
@@ -85,7 +88,7 @@ class MainActivity : ComponentActivity() {
 
     override fun onStart() {
         super.onStart()
-        val toast  = Toast.makeText(applicationContext, "onStart Called", Toast.LENGTH_LONG).show()
+        val toast = Toast.makeText(applicationContext, "onStart Called", Toast.LENGTH_LONG).show()
     }
 
     override fun onRestart() {
@@ -130,9 +133,12 @@ class MainActivity : ComponentActivity() {
     }
     */
 
-    fun onButtonRead (view: View?) {
+    fun onButtonRead(view: View?) {
 
-        val pref = applicationContext.getSharedPreferences("paperino_preferenze", 0) // 0 - for private mode
+        val pref = applicationContext.getSharedPreferences(
+            "paperino_preferenze",
+            0
+        ) // 0 - for private mode
         val editor = pref.edit()
         val email = pref.getString("email", null)
         println(email)
@@ -181,7 +187,7 @@ class MainActivity : ComponentActivity() {
 
         cursor!!.moveToFirst()
 
-        while(cursor.moveToNext()){
+        while (cursor.moveToNext()) {
             println(cursor.getString(cursor.getColumnIndexOrThrow(DBHelper.USERS_NAME_COL)))
             println(cursor.getString(cursor.getColumnIndexOrThrow(DBHelper.USERS_AGE_COL)))
             println(cursor.getString(cursor.getColumnIndexOrThrow(DBHelper.USERS_ADDRESS_COL)))
@@ -193,6 +199,6 @@ class MainActivity : ComponentActivity() {
         // print(cursor.getString(2))
 
         cursor.close()
-        }
     }
+}
 
