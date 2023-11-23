@@ -7,6 +7,7 @@ import android.widget.Button
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import com.example.app1.db.DBHelper
+import com.google.firebase.Firebase
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -18,21 +19,6 @@ class MainActivity : ComponentActivity() {
 
         val button =  findViewById<Button>(R.id.button)
 
-        // Toast.makeText(applicationContext,"onCreate Called",Toast.LENGTH_LONG).show()
-        // Toast.makeText(applicationContext,"this is a toast message",Toast.LENGTH_SHORT).show()
-
-        // SharedPreferences ()
-        // https://developer.android.com/reference/android/content/SharedPreferences
-        // https://developer.android.com/reference/android/content/SharedPreferences.Editor
-
-        // Activities => Attività => componenti grafici con cui si interagisce
-        // Services => Servizi => componenti che lavorano in background
-
-        // coppie chiave-valore
-        // prima devo accedere ad Application Context
-
-        // 1) approccio con getSharedPreferences
-        // shared = condiviso da tutte le Activity
 
         val preferenze_registrazione = applicationContext.getSharedPreferences("registered_user", 0)
         val editor_registrazione = preferenze_registrazione.edit()
@@ -68,6 +54,8 @@ class MainActivity : ComponentActivity() {
         // non esiste push e pop,
         // per aggiungere un'activity allo stack usi StartActivity()
         // per rimuovere un'activity dallo stack usi finish()
+
+
 
         /*
         button.setOnClickListener(){
