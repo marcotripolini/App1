@@ -28,11 +28,11 @@ class MainActivity : ComponentActivity() {
 
         val preferenze_registrazione = applicationContext.getSharedPreferences("registered_user", 0)
         val editor_registrazione = preferenze_registrazione.edit()
-        editor_registrazione.putString("nome", "Marco");
-        editor_registrazione.putString("cognome", "Tripolini");
-        editor_registrazione.putString("email", "marco.tripolini@gmail.com");
-        editor_registrazione.putString("telefono", "3206156477");
-        editor_registrazione.commit();
+        editor_registrazione.putString("nome", "Marco")
+        editor_registrazione.putString("cognome", "Tripolini")
+        editor_registrazione.putString("email", "marco.tripolini@gmail.com")
+        editor_registrazione.putString("telefono", "3206156477")
+        editor_registrazione.commit()
         // val preferenze = applicationContext.getSharedPreferences("paperino_preferenze", 0)  // 0 - for private mode
 
         // 2) approccio con getPreferences
@@ -40,21 +40,21 @@ class MainActivity : ComponentActivity() {
 
         val preferenze_carrello = applicationContext.getSharedPreferences("ultimo_carrello", 0)
         val editor_preferenze_carrello = preferenze_carrello.edit()
-        editor_preferenze_carrello.putString("data_carrello", "gg-mm-aa");
-        editor_preferenze_carrello.putString("elenco_prodotti", "object");
-        editor_preferenze_carrello.putString("totale_carrello", "prezzo");
-        editor_preferenze_carrello.putString("codici_sconto", "3206156477");
-        editor_preferenze_carrello.commit();
+        editor_preferenze_carrello.putString("data_carrello", "gg-mm-aa")
+        editor_preferenze_carrello.putString("elenco_prodotti", "object")
+        editor_preferenze_carrello.putString("totale_carrello", "prezzo")
+        editor_preferenze_carrello.putString("codici_sconto", "3206156477")
+        editor_preferenze_carrello.commit()
         val preferenze = applicationContext.getSharedPreferences("paperino_preferenze", 0)  // 0 - for private mode
 
 
         // Editor serve per scrivere nelle preferenze
         // 1 - anche altre applicazioni
         val editor = preferenze.edit()
-        editor.putString("nome", "Paolino");
-        editor.putString("cognome", "Paperino");
-        editor.putString("email", "paolino.paperino@paperopoli.quack");
-        editor.commit();
+        editor.putString("nome", "Paolino")
+        editor.putString("cognome", "Paperino")
+        editor.putString("email", "paolino.paperino@paperopoli.quack")
+        editor.commit()
 
         val preferenze2 = this.getPreferences(0) // 0 - for private mode
 
@@ -149,55 +149,9 @@ class MainActivity : ComponentActivity() {
         */
     }
 
-    override fun onStart() {
-        super.onStart()
-        val toast  = Toast.makeText(applicationContext, "onStart Called", Toast.LENGTH_LONG).show()
-    }
-
-    override fun onRestart() {
-        super.onRestart()
-        // It will show a message on the screen
-        // then onRestart is invoked
-        val toast = Toast.makeText(applicationContext, "onRestart Called", Toast.LENGTH_LONG).show()
-    }
-
-    override fun onResume() {
-        super.onResume()
-        // It will show a message on the screen
-        // then onResume is invoked
-        val toast = Toast.makeText(applicationContext, "onResume Called", Toast.LENGTH_LONG).show()
-    }
-
-    override fun onPause() {
-        super.onPause()
-        // It will show a message on the screen
-        // then onPause is invoked
-        val toast = Toast.makeText(applicationContext, "onPause Called", Toast.LENGTH_LONG).show()
-    }
-
-    override fun onStop() {
-        super.onStop()
-        // It will show a message on the screen
-        // then onStop is invoked
-        val toast = Toast.makeText(applicationContext, "onStop Called", Toast.LENGTH_LONG).show()
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        // It will show a message on the screen
-        // then onDestroy is invoked
-        val toast = Toast.makeText(applicationContext, "onDestroy Called", Toast.LENGTH_LONG).show()
-    }
-
-    /*
-    fun onFranco(view: View?) {
-        println("Hello world")
-    }
-    */
 
     fun onButtonRead (view: View?) {
         val pref = applicationContext.getSharedPreferences("paperino_preferenze", 0) // 0 - for private mode
-        val editor = pref.edit()
         val email = pref.getString("email", null)
         println(email)
 
@@ -250,9 +204,6 @@ class MainActivity : ComponentActivity() {
             println(cursor.getString(cursor.getColumnIndexOrThrow(DBHelper.USERS_PHONE_COL)))
         } while (cursor.moveToNext())
 
-        // print(cursor.getString(1))
-        // print(cursor.getString(2))
-
         cursor.close()
 
         val cursor2 = db.getUserById("19")
@@ -263,8 +214,5 @@ class MainActivity : ComponentActivity() {
         } while (cursor2.moveToNext())
 
         cursor2.close()
-
         }
-
     }
-
