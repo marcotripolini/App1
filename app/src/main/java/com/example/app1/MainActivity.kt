@@ -1,13 +1,20 @@
 package com.example.app1
 
 import android.os.Bundle
-import android.view.Gravity
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import com.example.app1.db.DBHelper
 import com.google.firebase.Firebase
+import com.google.firebase.database.database
+import com.google.firebase.firestore.DocumentReference
+import com.google.firebase.firestore.FirebaseFirestore
+
+
+
+
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -55,8 +62,84 @@ class MainActivity : ComponentActivity() {
         // per aggiungere un'activity allo stack usi StartActivity()
         // per rimuovere un'activity dallo stack usi finish()
 
+        // Database Firebase:
+        // Write a message to the database
+        val database = Firebase.database
+        val myRef = database.getReference("message")
+        myRef.setValue("Hello, World!")
 
+        val myRef1 = database.getReference("message1")
+        myRef.setValue("Hello, World1!")
 
+        // parliamo con il database
+        // ottengo l'istanza
+        val db: FirebaseFirestore = FirebaseFirestore.getInstance()
+        // voglio accedere alla collection prodotti
+
+        val docRef: DocumentReference = db.collection("prodotti").document("1")
+
+        // Leggi i dati del documento
+
+        docRef.get()
+            .addOnSuccessListener { document ->
+                if (document != null) {
+                    // Accedi ai campi del documento
+                    val titolo = document.getString("titolo")
+                    val descrizione = document.getString("descrizione")
+                    val prezzo = document.getLong("prezzo")
+                    // Fai qualcosa con i dati ottenuti
+                    if (titolo != null && descrizione != null) {
+                        // Usa i dati (ad esempio, visualizzali o elaborali)
+                        println("Titolo: $titolo, Descrizione: $descrizione")
+                    } else {
+                        // I dati non sono presenti o sono nulli
+                        println("I dati non sono presenti o sono nulli.")
+                    }
+                } else {
+                    println("Il documento non esiste.")
+                }
+            }
+            .addOnFailureListener { exception ->
+                println("Errore nel recupero del documento: $exception")
+            }
+
+        println (docRef)
+
+        /*
+        val prodotto = hashMapOf(
+            "titolo" to "Fontina",
+            "descrizione" to "Formaggio valdostano",
+            "prezzo" to "95",
+        )
+
+        db.collection("prodotti").document("6")
+            .set(prodotto)
+            .addOnSuccessListener { Log.d("Scrivi", "DocumentSnapshot successfully written!") }
+            .addOnFailureListener { e -> Log.w("Scrivi", "Error writing document", e) }
+        */
+
+        db.collection("prodotti")
+            .get()
+            .addOnSuccessListener { result ->
+                for (document in result) {
+                    Log.d("Leggi", "${document.id} => ${document.data}")
+                }
+            }
+            .addOnFailureListener { exception ->
+                Log.d("Leggi", "Error getting documents: ", exception)
+            }
+
+        db.collection("prodotti")
+            .whereEqualTo("titolo", "Brie")
+            .get()
+            .addOnSuccessListener { documents ->
+                for (document in documents) {
+                    Log.d("Leggi", "${document.id} => ${document.data}")
+                }
+            }
+            .addOnFailureListener { exception ->
+                Log.w("Leggi", "Error getting documents: ", exception)
+            }
         /*
         button.setOnClickListener(){
             Toast.makeText(applicationContext,"Ciao io sono un messaggio toast",Toast.LENGTH_SHORT).show()
@@ -110,7 +193,6 @@ class MainActivity : ComponentActivity() {
         // then onDestroy is invoked
         val toast = Toast.makeText(applicationContext, "onDestroy Called", Toast.LENGTH_LONG).show()
     }
-
 
     /*
     fun onFranco(view: View?) {
