@@ -26,7 +26,6 @@ class MainActivity : ComponentActivity() {
 
         val button =  findViewById<Button>(R.id.button)
 
-
         val preferenze_registrazione = applicationContext.getSharedPreferences("registered_user", 0)
         val editor_registrazione = preferenze_registrazione.edit()
         editor_registrazione.putString("nome", "Marco");
@@ -75,7 +74,6 @@ class MainActivity : ComponentActivity() {
         // ottengo l'istanza
         val db: FirebaseFirestore = FirebaseFirestore.getInstance()
         // voglio accedere alla collection prodotti
-
         val docRef: DocumentReference = db.collection("prodotti").document("1")
 
         // Leggi i dati del documento
