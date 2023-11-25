@@ -48,7 +48,8 @@ class MainActivity : ComponentActivity() {
         val preferenze = applicationContext.getSharedPreferences("paperino_preferenze", 0)  // 0 - for private mode
 
 
-        // Editor serve per scrivere nelle preferenze                                                                                // 1 - anche altre applicazioni
+        // Editor serve per scrivere nelle preferenze
+        // 1 - anche altre applicazioni
         val editor = preferenze.edit()
         editor.putString("nome", "Paolino");
         editor.putString("cognome", "Paperino");
@@ -56,10 +57,6 @@ class MainActivity : ComponentActivity() {
         editor.commit();
 
         val preferenze2 = this.getPreferences(0) // 0 - for private mode
-
-        // non esiste push e pop,
-        // per aggiungere un'activity allo stack usi StartActivity()
-        // per rimuovere un'activity dallo stack usi finish()
 
         // Database Firebase:
         // Write a message to the database
