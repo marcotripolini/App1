@@ -1,6 +1,11 @@
 package com.example.app1
 
+import android.app.DownloadManager
+import android.content.Context
+import android.content.IntentFilter
+import android.net.Uri
 import android.os.Bundle
+import android.os.Environment
 import android.util.Log
 import android.view.View
 import android.widget.Button
@@ -11,23 +16,45 @@ import com.google.firebase.Firebase
 import com.google.firebase.database.database
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
+import android.content.BroadcastReceiver
+import android.content.Intent
 
-
-
-
+var enqueueId: Long = 0
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        // inizializza la view
-        // spiega all'activity quale è
-        // l'xml da caricare...
+
         setContentView(R.layout.activity_main)
 
-        val button =  findViewById<Button>(R.id.button)
+        // val mAuth: FirebaseAuth = FirebaseAuth.getInstance()
 
+        // Crea una richiesta di download
+
+        val request = DownloadManager.Request(Uri.parse("https://www.improvity.it/wp-content/uploads/2021/04/cropped-cropped-improvity_logo-1-1-768x328.png"))
+        request.setTitle("Image Download")
+        request.setDescription("Downloading image...")
+
+        // Configura la directory di destinazione e il nome del file
+        request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "downloaded_image.jpg")
+
+        // Ottieni il servizio di DownloadManager dal sistema
+        val downloadManager = this.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
+
+        // Invia la richiesta di download e ottieni l'ID dell'enqueued download
+        enqueueId = downloadManager.enqueue(request)
+
+        // Registra un BroadcastReceiver per ricevere una notifica quando il download è completato
+        this.registerReceiver(DownloadReceiver(), IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE))
+
+        val button =  findViewById<Button>(R.id.button)
+        val nomefile = "pippo.png"
+        // scaricare un file
+
+        Toast.makeText(this, "Download in corso...", Toast.LENGTH_SHORT).show()
         val preferenze_registrazione = applicationContext.getSharedPreferences("registered_user", 0)
         val editor_registrazione = preferenze_registrazione.edit()
+
         editor_registrazione.putString("nome", "Marco")
         editor_registrazione.putString("cognome", "Tripolini")
         editor_registrazione.putString("email", "marco.tripolini@gmail.com")
@@ -60,21 +87,24 @@ class MainActivity : ComponentActivity() {
 
         // Database Firebase:
         // Write a message to the database
+        // ottengo il riferimento al database
         val database = Firebase.database
-        val myRef = database.getReference("message")
-        myRef.setValue("Hello, World!")
 
-        val myRef1 = database.getReference("message1")
-        myRef.setValue("Hello, World1!")
+        // val myRef = database.getReference("message")
+        // myRef.setValue("Hello, World!")
+
+        // val myRef1 = database.getReference("message1")
+        // myRef.setValue("Hello, World1!")
 
         // parliamo con il database
         // ottengo l'istanza
         val db: FirebaseFirestore = FirebaseFirestore.getInstance()
         // voglio accedere alla collection prodotti
+
         val docRef: DocumentReference = db.collection("prodotti").document("1")
-
+        // ************************************************
+        // asincrono
         // Leggi i dati del documento
-
         docRef.get()
             .addOnSuccessListener { document ->
                 if (document != null) {
@@ -97,7 +127,6 @@ class MainActivity : ComponentActivity() {
             .addOnFailureListener { exception ->
                 println("Errore nel recupero del documento: $exception")
             }
-
         println (docRef)
 
         /*
@@ -107,12 +136,11 @@ class MainActivity : ComponentActivity() {
             "prezzo" to "95",
         )
 
-        db.collection("prodotti").document("6")
+        db.collection("prodotti").document("7")
             .set(prodotto)
             .addOnSuccessListener { Log.d("Scrivi", "DocumentSnapshot successfully written!") }
             .addOnFailureListener { e -> Log.w("Scrivi", "Error writing document", e) }
         */
-
         db.collection("prodotti")
             .get()
             .addOnSuccessListener { result ->
@@ -148,7 +176,6 @@ class MainActivity : ComponentActivity() {
         }
         */
     }
-
 
     fun onButtonRead (view: View?) {
         val pref = applicationContext.getSharedPreferences("paperino_preferenze", 0) // 0 - for private mode
@@ -212,7 +239,22 @@ class MainActivity : ComponentActivity() {
             println(cursor2.getString(cursor.getColumnIndexOrThrow(DBHelper.USERS_NAME_COL)))
             println(cursor2.getString(cursor.getColumnIndexOrThrow(DBHelper.USERS_PHONE_COL)))
         } while (cursor2.moveToNext())
-
         cursor2.close()
         }
+
+    private class DownloadReceiver : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            // Verifica che l'azione sia di completamento del download
+            if (DownloadManager.ACTION_DOWNLOAD_COMPLETE == intent.action) {
+                val downloadId = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1)
+
+                // Verifica se il download è quello che abbiamo iniziato
+                if (downloadId == enqueueId) {
+                    // L'immagine è stata scaricata con successo, puoi ora gestire il file salvato nella cache
+                    // Ad esempio, puoi leggere il file e convertirlo in un Bitmap
+                    // Oppure puoi utilizzare il file direttamente nell'applicazione
+                }
+            }
+        }
     }
+}
