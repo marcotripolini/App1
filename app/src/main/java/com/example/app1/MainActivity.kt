@@ -1,8 +1,12 @@
 package com.example.app1
 
+import android.Manifest
 import android.app.DownloadManager
+import android.content.BroadcastReceiver
 import android.content.Context
+import android.content.Intent
 import android.content.IntentFilter
+import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
@@ -11,45 +15,64 @@ import android.view.View
 import android.widget.Button
 import android.widget.Toast
 import androidx.activity.ComponentActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import com.example.app1.db.DBHelper
 import com.google.firebase.Firebase
 import com.google.firebase.database.database
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
-import android.content.BroadcastReceiver
-import android.content.Intent
 
 var enqueueId: Long = 0
 
 class MainActivity : ComponentActivity() {
+    private val MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 1
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_main)
 
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+            != PackageManager.PERMISSION_GRANTED
+        ) {
+            // Se il permesso non è già stato concesso, richiedilo all'utente
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
+                MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE
+            )
+        } else {
+            // Se il permesso è già stato concesso, procedi con il download
+            // startDownload()
+            val request = DownloadManager.Request(Uri.parse("https://www.improvity.it/wp-content/uploads/2021/04/cropped-cropped-improvity_logo-1-1-768x328.png"))
+            request.setTitle("Image Download")
+            request.setDescription("Downloading image...")
+
+            // Configura la directory di destinazione e il nome del file
+            request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "downloaded_image.jpg")
+
+            // Ottieni il servizio di DownloadManager dal sistema
+            val downloadManager = this.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
+
+            // Invia la richiesta di download e ottieni l'ID dell'enqueued download
+            enqueueId = downloadManager.enqueue(request)
+
+            // Registra un BroadcastReceiver per ricevere una notifica quando il download è completato
+            this.registerReceiver(DownloadReceiver(), IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE))
+
+            val button =  findViewById<Button>(R.id.button)
+            val nomefile = "pippo.png"
+            // scaricare un file
+
+        }
+
+
         // val mAuth: FirebaseAuth = FirebaseAuth.getInstance()
 
         // Crea una richiesta di download
 
-        val request = DownloadManager.Request(Uri.parse("https://www.improvity.it/wp-content/uploads/2021/04/cropped-cropped-improvity_logo-1-1-768x328.png"))
-        request.setTitle("Image Download")
-        request.setDescription("Downloading image...")
 
-        // Configura la directory di destinazione e il nome del file
-        request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "downloaded_image.jpg")
-
-        // Ottieni il servizio di DownloadManager dal sistema
-        val downloadManager = this.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
-
-        // Invia la richiesta di download e ottieni l'ID dell'enqueued download
-        enqueueId = downloadManager.enqueue(request)
-
-        // Registra un BroadcastReceiver per ricevere una notifica quando il download è completato
-        this.registerReceiver(DownloadReceiver(), IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE))
-
-        val button =  findViewById<Button>(R.id.button)
-        val nomefile = "pippo.png"
-        // scaricare un file
 
         Toast.makeText(this, "Download in corso...", Toast.LENGTH_SHORT).show()
         val preferenze_registrazione = applicationContext.getSharedPreferences("registered_user", 0)
