@@ -42,16 +42,10 @@ class MainActivity : ComponentActivity() {
                 arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
                 MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE
             )
-        } else {
-            // Se il permesso è già stato concesso, procedi con il download
-            // startDownload()
-            val request = DownloadManager.Request(Uri.parse("https://www.improvity.it/wp-content/uploads/2021/04/cropped-cropped-improvity_logo-1-1-768x328.png"))
-            request.setTitle("Image Download")
-            request.setDescription("Downloading image...")
 
+            val request = DownloadManager.Request(Uri.parse("https://www.improvity.it/wp-content/uploads/2021/04/cropped-cropped-improvity_logo-1-1-768x328.png"))
             // Configura la directory di destinazione e il nome del file
             request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "downloaded_image.jpg")
-
             // Ottieni il servizio di DownloadManager dal sistema
             val downloadManager = this.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
 
@@ -60,21 +54,33 @@ class MainActivity : ComponentActivity() {
 
             // Registra un BroadcastReceiver per ricevere una notifica quando il download è completato
             this.registerReceiver(DownloadReceiver(), IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE))
+            Toast.makeText(this, "Download in corso...", Toast.LENGTH_SHORT).show()
 
-            val button =  findViewById<Button>(R.id.button)
-            val nomefile = "pippo.png"
-            // scaricare un file
+
+        } else {
+            val request = DownloadManager.Request(Uri.parse("https://www.improvity.it/wp-content/uploads/2021/04/cropped-cropped-improvity_logo-1-1-768x328.png"))
+            // Configura la directory di destinazione e il nome del file
+            request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "downloaded_image.jpg")
+            // Ottieni il servizio di DownloadManager dal sistema
+            val downloadManager = this.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
+
+            // Invia la richiesta di download e ottieni l'ID dell'enqueued download
+            enqueueId = downloadManager.enqueue(request)
+
+            // Registra un BroadcastReceiver per ricevere una notifica quando il download è completato
+            this.registerReceiver(DownloadReceiver(), IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE))
+            Toast.makeText(this, "Download in corso...", Toast.LENGTH_SHORT).show()
 
         }
 
+        val button =  findViewById<Button>(R.id.button)
+        val nomefile = "pippo.png"
 
         // val mAuth: FirebaseAuth = FirebaseAuth.getInstance()
 
         // Crea una richiesta di download
 
 
-
-        Toast.makeText(this, "Download in corso...", Toast.LENGTH_SHORT).show()
         val preferenze_registrazione = applicationContext.getSharedPreferences("registered_user", 0)
         val editor_registrazione = preferenze_registrazione.edit()
 
