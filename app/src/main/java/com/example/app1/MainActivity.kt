@@ -7,12 +7,14 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.PackageManager
+import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
 import android.util.Log
 import android.view.View
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.core.app.ActivityCompat
@@ -22,12 +24,18 @@ import com.google.firebase.Firebase
 import com.google.firebase.database.database
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
+import java.io.File
+import java.io.FileInputStream
+import java.io.FileOutputStream
+import java.io.IOException
 
 var enqueueId: Long = 0
+private val fileName = "nome_immagine_001.jpg"
+// private val downloadUrl = "https://upload.wikimedia.org/wikipedia/commons/5/57/Mozzarella_di_bufala3.jpg"
+private val downloadUrl = "https://www.improvity.it/wp-content/uploads/2021/04/cropped-cropped-improvity_logo-1-1-768x328.png"
 
 class MainActivity : ComponentActivity() {
     private val MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 1
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -43,9 +51,9 @@ class MainActivity : ComponentActivity() {
                 MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE
             )
 
-            val request = DownloadManager.Request(Uri.parse("https://www.improvity.it/wp-content/uploads/2021/04/cropped-cropped-improvity_logo-1-1-768x328.png"))
+            val request = DownloadManager.Request(Uri.parse(downloadUrl))
             // Configura la directory di destinazione e il nome del file
-            request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "downloaded_image.jpg")
+            request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, fileName)
             // Ottieni il servizio di DownloadManager dal sistema
             val downloadManager = this.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
 
@@ -55,12 +63,11 @@ class MainActivity : ComponentActivity() {
             // Registra un BroadcastReceiver per ricevere una notifica quando il download è completato
             this.registerReceiver(DownloadReceiver(), IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE))
             Toast.makeText(this, "Download in corso...", Toast.LENGTH_SHORT).show()
-
-
         } else {
-            val request = DownloadManager.Request(Uri.parse("https://www.improvity.it/wp-content/uploads/2021/04/cropped-cropped-improvity_logo-1-1-768x328.png"))
+            val request = DownloadManager.Request(Uri.parse(downloadUrl))
             // Configura la directory di destinazione e il nome del file
-            request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "downloaded_image.jpg")
+            request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, fileName)
+
             // Ottieni il servizio di DownloadManager dal sistema
             val downloadManager = this.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
 
@@ -70,16 +77,22 @@ class MainActivity : ComponentActivity() {
             // Registra un BroadcastReceiver per ricevere una notifica quando il download è completato
             this.registerReceiver(DownloadReceiver(), IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE))
             Toast.makeText(this, "Download in corso...", Toast.LENGTH_SHORT).show()
+        }
 
+        val imageView: ImageView = findViewById(R.id.imageView)
+        // quale immagine vogliamo visualizzare?
+        val fileName = "nome_immagine_001.jpg"
+        val file = File(cacheDir, fileName)
+
+        // Verifica se il file esiste
+        if (file.exists()) {
+            val bitmap = BitmapFactory.decodeFile(file.absolutePath)
+          imageView.setImageBitmap(bitmap)
         }
 
         val button =  findViewById<Button>(R.id.button)
-        val nomefile = "pippo.png"
 
         // val mAuth: FirebaseAuth = FirebaseAuth.getInstance()
-
-        // Crea una richiesta di download
-
 
         val preferenze_registrazione = applicationContext.getSharedPreferences("registered_user", 0)
         val editor_registrazione = preferenze_registrazione.edit()
@@ -271,6 +284,7 @@ class MainActivity : ComponentActivity() {
         cursor2.close()
         }
 
+
     private class DownloadReceiver : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             // Verifica che l'azione sia di completamento del download
@@ -282,8 +296,42 @@ class MainActivity : ComponentActivity() {
                     // L'immagine è stata scaricata con successo, puoi ora gestire il file salvato nella cache
                     // Ad esempio, puoi leggere il file e convertirlo in un Bitmap
                     // Oppure puoi utilizzare il file direttamente nell'applicazione
+
+                    val sourceFile = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), fileName)
+                    val destinationDir = context.cacheDir
+                    val copiedFile = copyFileToCache(sourceFile, destinationDir)
+                    if (copiedFile != null) {
+                        // Il file è stato copiato con successo nella directory di cache
+                    } else {
+                        // Si è verificato un errore durante la copia del file
+                    }
                 }
             }
         }
+    }
+}
+
+fun copyFileToCache(sourceFile: File, destinationDir: File): File? {
+    if (!sourceFile.exists()) {
+        // Il file di origine non esiste
+        return null
+    }
+
+    val destinationFile = File(destinationDir, sourceFile.name)
+
+    try {
+        val sourceChannel = FileInputStream(sourceFile).channel
+        val destinationChannel = FileOutputStream(destinationFile).channel
+
+        sourceChannel.use { input ->
+            destinationChannel.use { output ->
+                output.transferFrom(input, 0, input.size())
+            }
+        }
+        return destinationFile
+    } catch (e: IOException) {
+        // Gestisci l'eccezione
+        e.printStackTrace()
+        return null
     }
 }
