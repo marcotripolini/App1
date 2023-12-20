@@ -30,9 +30,9 @@ import java.io.FileOutputStream
 import java.io.IOException
 
 var enqueueId: Long = 0
-private val fileName = "nome_immagine_001.jpg"
-// private val downloadUrl = "https://upload.wikimedia.org/wikipedia/commons/5/57/Mozzarella_di_bufala3.jpg"
-private val downloadUrl = "https://www.improvity.it/wp-content/uploads/2021/04/cropped-cropped-improvity_logo-1-1-768x328.png"
+private val fileName = "nome_immagine_008.jpg"
+private val downloadUrl = "https://upload.wikimedia.org/wikipedia/commons/5/57/Mozzarella_di_bufala3.jpg"
+// private val downloadUrl = "https://www.improvity.it/wp-content/uploads/2021/04/cropped-cropped-improvity_logo-1-1-768x328.png"
 
 class MainActivity : ComponentActivity() {
     private val MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 1
@@ -81,13 +81,13 @@ class MainActivity : ComponentActivity() {
 
         val imageView: ImageView = findViewById(R.id.imageView)
         // quale immagine vogliamo visualizzare?
-        val fileName = "nome_immagine_001.jpg"
+        val fileName = "nome_immagine_008.jpg"
         val file = File(cacheDir, fileName)
 
         // Verifica se il file esiste
         if (file.exists()) {
             val bitmap = BitmapFactory.decodeFile(file.absolutePath)
-          imageView.setImageBitmap(bitmap)
+            imageView.setImageBitmap(bitmap)
         }
 
         val button =  findViewById<Button>(R.id.button)
@@ -284,7 +284,6 @@ class MainActivity : ComponentActivity() {
         cursor2.close()
         }
 
-
     private class DownloadReceiver : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             // Verifica che l'azione sia di completamento del download
@@ -296,7 +295,6 @@ class MainActivity : ComponentActivity() {
                     // L'immagine è stata scaricata con successo, puoi ora gestire il file salvato nella cache
                     // Ad esempio, puoi leggere il file e convertirlo in un Bitmap
                     // Oppure puoi utilizzare il file direttamente nell'applicazione
-
                     val sourceFile = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), fileName)
                     val destinationDir = context.cacheDir
                     val copiedFile = copyFileToCache(sourceFile, destinationDir)
@@ -313,7 +311,6 @@ class MainActivity : ComponentActivity() {
 
 fun copyFileToCache(sourceFile: File, destinationDir: File): File? {
     if (!sourceFile.exists()) {
-        // Il file di origine non esiste
         return null
     }
 
@@ -330,7 +327,6 @@ fun copyFileToCache(sourceFile: File, destinationDir: File): File? {
         }
         return destinationFile
     } catch (e: IOException) {
-        // Gestisci l'eccezione
         e.printStackTrace()
         return null
     }
